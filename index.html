@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Junior Astronaut Mission Trainer</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<canvas id="gl"></canvas><div id="tint"></div>
+<button id="sndBtn" onclick="snd=!snd;this.textContent=snd?'🔊':'🔇'">🔊</button>
+<div class="wrap">
+
+<div class="screen active" id="s-intro">
+<div class="logwrap">
+<h1>Junior Astronaut<br>Mission Trainer</h1>
+<p class="tag" id="lsub"></p>
+<svg id="rocket" viewBox="0 0 84 140"><g class="fl"><path d="M32 98 Q42 140 52 98Z" fill="#ff9a3c"/><path d="M36 98 Q42 125 48 98Z" fill="#ffe28a"/></g><path d="M26 98 L10 118 V84 L26 70Z" fill="#e0442f"/><path d="M58 98 L74 118 V84 L58 70Z" fill="#e0442f"/><path d="M42 6 C60 28 62 62 58 98 H26 C22 62 24 28 42 6Z" fill="#f4f4f8"/><path d="M42 6 C50 16 54 26 55 34 H29 C30 26 34 16 42 6Z" fill="#e0442f"/><circle cx="42" cy="58" r="10" fill="#4fd1ff" stroke="#c9d3e6" stroke-width="3"/><rect x="34" y="98" width="16" height="6" fill="#9aa7c7"/></svg>
+<div id="profList"></div>
+<div id="newForm" class="card" style="display:none;margin-bottom:10px"><input id="newName" type="text" placeholder="اسم رائد الفضاء الجديد" maxlength="14" style="margin-top:0"><div id="avRow" style="margin:8px 0"></div><div style="display:flex;gap:8px"><button class="btn" onclick="createP()" style="margin:0">حفظ ✅</button><button class="btn secondary" onclick="showNew(false)" style="margin:0">إلغاء</button></div></div>
+<button class="btn secondary" id="addBtn" onclick="showNew(true)" style="margin-top:0">＋ رائد جديد على نفس الجهاز</button>
+<button class="btn" id="goBtn" onclick="launch()">🚀 انطلق</button>
+<button class="btn secondary" onclick="showScreen('s-sources')">📚 مصادر المعلومات</button>
+<p class="tag" style="font-size:.72rem;margin-top:12px">🌍 صُنعت لهاكاثون NASA Space Apps</p>
+</div>
+</div>
+
+<div class="screen" id="s-sources">
+<h1>📚 مصادر المعلومات</h1>
+<p class="tag">كل رقم وموقف في اللعبة مبني على بيانات ناسا ووكالات فضاء حقيقية، مش من خيال</p>
+<div class="card" style="font-size:.82rem;line-height:2.1">
+<a href="https://www.nasa.gov" target="_blank" style="color:var(--accent)">nasa.gov</a> — المصدر الرئيسي لكل بيانات المهمات<br>
+<a href="https://en.wikipedia.org/wiki/Artemis_program" target="_blank" style="color:var(--accent)">برنامج Artemis</a> — العودة البشرية للقمر<br>
+<a href="https://science.nasa.gov/missions/mer/nasas-opportunity-rover-mission-on-mars-comes-to-end" target="_blank" style="color:var(--accent)">نهاية مهمة Opportunity</a> — عاصفة الغبار 2018<br>
+<a href="https://ntrs.nasa.gov/api/citations/20220006578/downloads/USC%20Talk%20on%20Bioregenerative%20Life%20Support%20April%202022.pdf" target="_blank" style="color:var(--accent)">معدلات الماء والأكسجين والأكل</a> — بيانات ناسا الأساسية<br>
+<a href="https://spaceodysseyhub.com/missions/europa-clipper" target="_blank" style="color:var(--accent)">مهمة Europa Clipper</a> — استكشاف قمر يوروبا<br>
+<a href="https://en.wikipedia.org/wiki/Dragonfly_(Titan_space_probe)" target="_blank" style="color:var(--accent)">مهمة Dragonfly</a> — الطائرة القادمة إلى تيتان<br>
+<a href="https://www.asc-csa.gc.ca/eng/astronauts/space-medicine/bones.asp" target="_blank" style="color:var(--accent)">فقدان كثافة العظام</a> — تأثير انعدام الجاذبية
+</div>
+<button class="btn secondary" onclick="showScreen('s-intro')">رجوع</button>
+</div>
+
+<div class="screen" id="s-levels">
+<h1>رحلتك عبر النظام الشمسي</h1>
+<p class="tag">29 وجهة زارتها ناسا — اسحب بصباعك لفوق وتحت، وكل نجاح بيفتح الوجهة الجاية · <a href="#" onclick="resetProgress();return false" style="color:var(--sub)">إعادة ضبط التقدم</a></p>
+<p class="tag" id="xpLbl"></p>
+<div style="display:flex;gap:8px;margin:0 0 14px"><button class="btn secondary" onclick="showCodex()" style="margin:0">🔬 سجل الاكتشافات</button><button class="btn secondary" onclick="switchP()" style="margin:0">👥 رائد تاني</button></div>
+<div class="path" id="levelsGrid"></div>
+<div id="lbls"></div>
+</div>
+
+<div class="screen" id="s-game">
+<div class="stage"><div class="planet" id="planet"></div><div class="astro">🧑‍🚀</div></div>
+<div class="bars" id="bars"></div>
+<div class="day" id="dayLbl"></div>
+<div class="card event" id="eventCard"></div>
+</div>
+
+<div class="screen" id="s-end">
+<div style="flex:1;display:flex;flex-direction:column;justify-content:center">
+<div class="result-icon" id="resIcon"></div>
+<div class="result-title" id="resTitle"></div>
+<div class="result-sub" id="resSub"></div>
+<button class="btn" onclick="startMission(cur.levelId)">العب تاني 🔁</button>
+<button class="btn secondary" onclick="renderLevels();showScreen('s-levels')">اختار مستوى تاني</button>
+</div>
+</div>
+
+<div class="screen" id="s-codex"><h1>🔬 سجل الاكتشافات</h1><p class="tag">كل معلومة حقيقية بتفتحها بقراراتك بتتحفظ هنا</p><div id="codexList"></div><button class="btn secondary" onclick="renderLevels();showScreen('s-levels')">رجوع</button></div>
+</div>
+<script src="game.js"></script>
+</body>
+</html>
